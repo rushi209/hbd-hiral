@@ -18,7 +18,7 @@ app.get("/", (req, res) => {
     res.render("index");
 });
 
-app.post("/scan", (req, res) => {
+app.post("/surprise", (req, res) => {
     const url = req.body.url;
 
     // If the input is null return "Empty Data" error
@@ -32,11 +32,11 @@ app.post("/scan", (req, res) => {
         if (err) res.send("Error occured");
       
         // Let us return the QR code image as our response and set it to be the source used in the webpage
-        res.render("scan", { src });
+        res.render("surprise", { src });
     });
 });
 
-app.get('/scan', (req, res) => {
+app.get('/surprise', (req, res) => {
     res.redirect("/");
 })
 
