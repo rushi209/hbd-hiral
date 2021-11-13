@@ -41,5 +41,5 @@ app.get('/scan', (req, res) => {
 })
 
 // Setting up the port for listening requests
-const port = 5000;
+const port = process.env.PORT || 5000;
 app.listen(port, () => console.log("Server at 5000"));
