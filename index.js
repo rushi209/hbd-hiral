@@ -5,6 +5,7 @@ const app = express();
 const bp = require("body-parser");
 const qr = require("qrcode");
 const fs = require('fs');
+const path = require('path');
 
 // Using the ejs (Embedded JavaScript templates) as our template engine
 // and call the body parser  - middleware for parsing bodies from URL
@@ -46,39 +47,40 @@ app.get("/view", function (req, res) {
   });
 
 app.get("/video", function (req, res) {
-    // Ensure there is a range given for the video
-    const range = req.headers.range;
-    if (!range) {
-        res.status(400).send("Requires Range header");
-    }
+    var file = path.resolve(__dirname,"video/HBD_Hiral.mp4");
+    fs.stat(file, function(err, stats) {
+      if (err) {
+        if (err.code === 'ENOENT') {
+          // 404 Error if file not found
+          return res.sendStatus(404);
+        }
+      res.end(err);
+      }
+      var range = req.headers.range;
+      if (!range) {
+       // 416 Wrong range
+       return res.sendStatus(416);
+      }
+      var positions = range.replace(/bytes=/, "").split("-");
+      var start = parseInt(positions[0], 10);
+      var total = stats.size;
+      var end = positions[1] ? parseInt(positions[1], 10) : total - 1;
+      var chunksize = (end - start) + 1;
 
-    // get video stats (about 61MB)
-    const videoPath = "video/HBD_Hiral.mp4";
-    const videoSize = fs.statSync("video/HBD_Hiral.mp4").size;
-
-    // Parse Range
-    // Example: "bytes=32324-"
-    const CHUNK_SIZE = 10 ** 6; // 1MB
-    const start = Number(range.replace(/\D/g, ""));
-    const end = Math.min(start + CHUNK_SIZE, videoSize - 1);
-
-    // Create headers
-    const contentLength = end - start + 1;
-    const headers = {
-        "Content-Range": `bytes ${start}-${end}/${videoSize}`,
+      res.writeHead(206, {
+        "Content-Range": "bytes " + start + "-" + end + "/" + total,
         "Accept-Ranges": "bytes",
-        "Content-Length": contentLength,
-        "Content-Type": "video/mp4",
-    };
+        "Content-Length": chunksize,
+        "Content-Type": "video/mp4"
+      });
 
-    // HTTP Status 206 for Partial Content
-    res.writeHead(206, headers);
-
-    // create video read stream for this particular chunk
-    const videoStream = fs.createReadStream(videoPath);
-
-    // Stream the video chunk to the client
-    videoStream.pipe(res);
+      var stream = fs.createReadStream(file, { start: start, end: end })
+        .on("open", function() {
+          stream.pipe(res);
+        }).on("error", function(err) {
+          res.end(err);
+        });
+    });
 });
 
 // Setting up the port for listening requests
