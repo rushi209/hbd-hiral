@@ -13,8 +13,8 @@
     <style>
         body {
             font: 20px Montserrat, sans-serif;
-            line-height: 1.8;
             color: #f5f6f7;
+            background-color: #1abc9c;
         }
 
         p {
@@ -26,27 +26,8 @@
         }
 
         .bg-1 {
-            background-color: #1abc9c;
             /* Green */
             color: #ffffff;
-        }
-
-        .bg-2 {
-            background-color: #474e5d;
-            /* Dark Blue */
-            color: #ffffff;
-        }
-
-        .bg-3 {
-            background-color: #ffffff;
-            /* White */
-            color: #555555;
-        }
-
-        .bg-4 {
-            background-color: #2f2f2f;
-            /* Black Gray */
-            color: #fff;
         }
 
         .container-fluid {
@@ -54,18 +35,12 @@
             padding-bottom: 70px;
         }
 
-        .navbar {
-            padding-top: 15px;
-            padding-bottom: 15px;
-            border: 0;
-            border-radius: 0;
-            margin-bottom: 0;
-            font-size: 12px;
-            letter-spacing: 5px;
-        }
-
-        .navbar-nav li a:hover {
-            color: #1abc9c !important;
+        #videoPlayer {
+            width: 100%;
+            max-width: 600px;
+            height: auto;
+            box-shadow: 0 3px 15px #0003;
+            vertical-align: middle;
         }
     </style>
 </head>
@@ -75,7 +50,7 @@
     <!-- First Container -->
     <div class="container-fluid bg-1 text-center">
         <h3 class="margin" id="surprise">Hi Hiral, Watch with smile!</h3>
-        <video id="videoPlayer" width="60%" controls>
+        <video id="videoPlayer" controls>
             <source src="/video" type="video/mp4" />
         </video>
     </div>
