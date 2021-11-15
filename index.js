@@ -47,7 +47,7 @@ app.get("/view", function (req, res) {
   });
 
 app.get("/video", function (req, res) {
-    var file = path.resolve(__dirname,"video/HBD_Hiral.mp4");
+    var file = path.resolve(__dirname,"video/HBD_Jaads.mp4");
     fs.stat(file, function(err, stats) {
       if (err) {
         if (err.code === 'ENOENT') {
